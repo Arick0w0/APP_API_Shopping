@@ -4,9 +4,11 @@ import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:gap/gap.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:store_api_flutter_course/constands/global_colors.dart';
+import 'package:store_api_flutter_course/models/products_model.dart';
 import 'package:store_api_flutter_course/screens/categories_screen.dart';
 import 'package:store_api_flutter_course/screens/feeds_screen.dart';
 import 'package:store_api_flutter_course/screens/user_screen.dart';
+import 'package:store_api_flutter_course/services/api_handler.dart';
 import 'package:store_api_flutter_course/widgets/appbar_icons.dart';
 import 'package:store_api_flutter_course/widgets/feeds_grid.dart';
 import 'package:store_api_flutter_course/widgets/sale_widget.dart';
@@ -20,7 +22,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late TextEditingController _textEditingController = TextEditingController();
-  @override
+  // List<ProductModel> productsList = [];
   @override
   void initState() {
     _textEditingController = TextEditingController();
@@ -33,6 +35,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
     super.dispose();
   }
+
+  // @override
+  // void didChangeDependencies() {
+  //   getProducts();
+  //   super.didChangeDependencies();
+  // }
+
+  // Future<void> getProducts() async {
+  //   productsList = await APIHandler.getAllProducts();
+  //   setState(() {});
+  // }
 
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -145,7 +158,25 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     // ---- Feed Grid -------------
-                    const FeedsGridWidget(),
+                    FutureBuilder<List<ProductModel>>(
+                        future: APIHandler.getAllProducts(),
+                        builder: ((context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (snapshot.hasError) {
+                            Center(
+                              child: Text("An error occured ${snapshot.error}"),
+                            );
+                          } else if (snapshot.data == null) {
+                            const Center(
+                              child: Text("No products has been added yet"),
+                            );
+                          }
+                          return FeedsGridWidget(productsList: snapshot.data!);
+                        }))
                   ],
                 )),
               )
