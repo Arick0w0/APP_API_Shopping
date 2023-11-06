@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:store_api_flutter_course/models/products_model.dart';
 
 import 'feeds_widget.dart';
 
 class FeedsGridWidget extends StatelessWidget {
-  const FeedsGridWidget({Key? key}) : super(key: key);
+  const FeedsGridWidget({Key? key, required this.productsList})
+      : super(key: key);
+  final List<ProductModel> productsList;
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +19,12 @@ class FeedsGridWidget extends StatelessWidget {
             crossAxisCount: 2,
             crossAxisSpacing: 0.0,
             mainAxisSpacing: 0.0,
-            childAspectRatio: 0.8),
+            childAspectRatio: 0.7),
         itemBuilder: (context, index) {
-          return const FeedsWidget();
+          return ChangeNotifierProvider.value(
+            value: productsList[index],
+            child: const FeedsWidget(),
+          );
         });
   }
 }

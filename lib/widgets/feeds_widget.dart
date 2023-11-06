@@ -3,19 +3,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:gap/gap.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 import 'package:store_api_flutter_course/constands/global_colors.dart';
+import 'package:store_api_flutter_course/models/products_model.dart';
 import 'package:store_api_flutter_course/screens/product_detail.dart';
 
 class FeedsWidget extends StatelessWidget {
-  const FeedsWidget({super.key});
+  const FeedsWidget({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final ProductModel productsModelProvider =
+        Provider.of<ProductModel>(context);
     Size size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Material(
-        borderRadius: BorderRadius.circular(25.0),
+        borderRadius: BorderRadius.circular(8.0),
         color: Theme.of(context).cardColor,
         child: InkWell(
           borderRadius: BorderRadius.circular(8.0),
@@ -32,7 +38,7 @@ class FeedsWidget extends StatelessWidget {
               // ----------- HEADER PRiCE + ICON ----------
 
               Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -43,7 +49,7 @@ class FeedsWidget extends StatelessWidget {
                           style: const TextStyle(color: Colors.blue),
                           children: <TextSpan>[
                             TextSpan(
-                              text: "168.00",
+                              text: productsModelProvider.price.toString(),
                               style: TextStyle(
                                   color: lightTextColor,
                                   fontWeight: FontWeight.w600),
@@ -56,34 +62,34 @@ class FeedsWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              const Gap(10),
+              // const Gap(10),
 
               // -------------- FEED IMAGE ---------------
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: FancyShimmerImage(
-                  height: size.height * 0.12,
+                  height: size.height * 0.2,
                   width: double.infinity,
                   errorWidget: const Icon(
                     IconlyBold.danger,
                     color: Colors.red,
                     size: 28,
                   ),
-                  imageUrl: "https://i.ibb.co/vwB46Yq/shoes.png",
-                  boxFit: BoxFit.contain,
+                  imageUrl: productsModelProvider.images![0],
+                  boxFit: BoxFit.fill,
                 ),
               ),
               const Gap(10),
 
               // --- TITLE --------
-              const Padding(
-                padding: EdgeInsets.all(8.0),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  "Title",
+                  productsModelProvider.title.toString(),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   style: TextStyle(
-                    fontSize: 17,
+                    fontSize: 14,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
